@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [8.0.452+9]
+        java: [17]
 
     steps:
       - uses: actions/checkout@v4
