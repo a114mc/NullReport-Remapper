@@ -29,8 +29,6 @@ import java.util.jar.JarInputStream;
 
 public class NullReportRemapper {
 
-
-
     public static String SUSPICIOUS_PACKAGE_REGEX = "[^./]*(?:/[^./]*){3,}$";
     // 使用 Set<String> 来存储生成的 SRG 映射，避免重复
     public Set<String> generateMappings(InputStream classInputStream) throws IOException {
@@ -45,7 +43,7 @@ public class NullReportRemapper {
         try (JarInputStream jis = new JarInputStream(jarInputStream)) {
             JarEntry entry;
             while ((entry = jis.getNextJarEntry()) != null) {
-                if (entry.getName().endsWith(".class")) {
+                if (entry.getName().endsWith(".class") || entry.getName().endsWith(".class/")) {
                     byte[] classBytes = jis.readAllBytes();
                     ClassReader classReader = new ClassReader(classBytes);
                     classReader.accept(new ClassScanVisitor(mappings), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
