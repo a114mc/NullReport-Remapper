@@ -1,3 +1,20 @@
+/*
+    NullReport-Remapper, srg mappings generator.
+    Copyright (C) 2025  a114mc
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.omegalabs.mapper;
 
 import org.objectweb.asm.*;
@@ -79,19 +96,15 @@ public class NullReportRemapper {
         public void visitLdcInsn(Object value) {
             if (value instanceof String ldcString) {
                 if (ldcString.matches(SUSPICIOUS_PACKAGE_REGEX)) {
-                    // WARNING：Might be incorrect, use with caution
+                    // Might be incorrect, use with caution
 
-                    // 假设混淆类名是 "A"，混淆方法名是 "a"
                     // SRG formatted text:
                     // CL: <obfuscated/pack/Name> <original/pack/ClassName>
-                    // 我们可以将混淆类名和方法名直接用于左侧
                     String srgEntry = String.format("CL: %s %s",
                             obfuscatedClassNameInternal,
                             ldcString
                     );
 
-                    // 进一步优化：如果LDC字符串以类名结束，可能是一个CL映射
-                    // 但由于LDC出现在方法中，我们优先考虑MD
                     if (!mappings.contains(srgEntry)) { // 避免重复添加
                         mappings.add(srgEntry);
                         System.out.println("  Sussy ldc string found -> '" + ldcString + "'");
